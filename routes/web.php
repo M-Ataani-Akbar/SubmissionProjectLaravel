@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\ProdukController;
 Route::get('/', function () {
 return view('welcome');
 });
@@ -48,13 +50,6 @@ Route::get('/bantuan', function () {
 return view('bantuan', ['telepon' => '(024) 1234567']);
 })->name('bantuan');
 
-// Route::view tidak memerlukan closure
-Route::view('/layanan', 'layanan')->name('layanan');
-
-Route::get('/bantuan', function () {
-return view('bantuan', ['telepon' => '(024) 1234567']);
-})->name('bantuan');
-
 //3.5 Route Group dan Prefix
 Route::prefix('petugas')->name('petugas.')->group(function () {
 Route::get('/beranda', fn () => 'Beranda Petugas')
@@ -69,9 +64,26 @@ Route::get('/anggota/{id}', function (int $id) {
 Route::redirect('/home', '/');
 // Redirect permanen (kode 301)
 Route::permanentRedirect('/katalog-lama', '/info');
+
+/*Uji pada browser: /home (diarahkan ke /), /katalog-lama (diarahkan ke /info), dan /halaman-bebas
+(tampil pesan fallback).*/
+
+
+Route::get('/profil', [MahasiswaController::class, 'profil'])
+    ->name('mahasiswa.profil');
+
+Route::get('/produk', [ProdukController::class, 'index'])
+    ->name('produk.index');
+
+Route::get('/produk/{id}', [ProdukController::class, 'show'])
+    ->name('produk.show');
+
+Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
+    ->name('mahasiswa.index');
+
+Route::get('/mahasiswa/{nim}', [MahasiswaController::class, 'show'])
+    ->name('mahasiswa.show');
 // Dieksekusi bila tidak ada route yang cocok (letakkan paling bawah)
 Route::fallback(function () {
 return response('Maaf, halaman yang Anda cari tidak tersedia.', 404);
 });
-/*Uji pada browser: /home (diarahkan ke /), /katalog-lama (diarahkan ke /info), dan /halaman-bebas
-(tampil pesan fallback).*/
