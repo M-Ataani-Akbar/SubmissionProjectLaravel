@@ -17,4 +17,3 @@
     <a href="{{ route('matakuliah.index') }}">Kembali ke Daftar Mata Kuliah</a>
 </body>
 </html>
-```[cite: 1]
